@@ -9,17 +9,17 @@ function createGame(n) {
         game[i] = ".";
     }
 
-    pacman = Math.floor(Math.random() * n);
+    pacman = Math.floor(Math.random() * (n - 1));
     game[pacman] = "C";
 
     do {
-        ghost = Math.floor(Math.random() * n);
+        ghost = Math.floor(Math.random() * (n - 1));
     } while (ghost == pacman);
 
     game[ghost] = "^";
 
     do {
-        var fruit = Math.floor(Math.random() * n);
+        var fruit = Math.floor(Math.random() * (n - 1));
     } while ((fruit == pacman) || (fruit == ghost));
 
     game[fruit] = "@";
@@ -41,7 +41,7 @@ function checkFinishedLevel(game) {
     return true; //if there's no cell with ".", then the level is completed
 }
 
-function nextLevel(game) {
+function resetLevel(game) {
     return createGame(game.length);
 }
 
@@ -51,12 +51,19 @@ function moveLeft(game) {
             score++;
         }
         game[pacman - 1] = game[pacman - 1] + "C";
-        game[pacman] = "";
+
+        if (game[pacman] == "C") {
+            game[pacman] = "";
+        }
+        else if (game[pacman] != "") {
+            game[pacman] = game[pacman].slice(0, 1);
+        }
+
         pacman = pacman - 1;
     }
 
     if (checkFinishedLevel(game)) {
-        game = nextLevel(game);
+        game = resetLevel(game);
     }
 
     return game;
@@ -69,13 +76,59 @@ function moveRight(game) {
         }
 
         game[pacman + 1] = game[pacman + 1] + "C";
-        game[pacman] = "";
+        
+        if (game[pacman] == "C") {
+            game[pacman] = "";
+        }
+        else if (game[pacman] != "") {
+            game[pacman] = game[pacman].slice(0, 1);
+        }
+
         pacman = pacman + 1;
     }
 
     if (checkFinishedLevel(game)) {
-        game = nextLevel(game);
+        game = resetLevel(game);
     }
 
     return game;
 }
+
+function moveGhost(game) {
+    direction = Math.round(Math.random());
+
+    if (direction == 0) { //move left
+        if (ghost > 0) {
+            game[ghost - 1] = game[ghost - 1] + "^";
+
+            if (game[ghost] == "^") {
+                game[ghost] = "";
+            }
+            else if (game[ghost] != "") {
+                game[ghost] = game[ghost].slice(0, 1);
+            }
+            ghost = ghost - 1;
+        }
+    }
+    else {
+        if (ghost < game.length) {
+            game[ghost + 1] = game[ghost + 1] + "^";
+
+            if (game[ghost] == "^") {
+                game[ghost] = "";
+            }
+            else if (game[ghost] != "") {
+                game[ghost] = game[ghost].slice(0, 1);
+            }
+            ghost = ghost + 1;
+        }
+    }
+
+    return game;
+}
+
+var ghost = createGame(10);
+//move ghost at 1 ms
+const ghostMovement = setTimeout(function() {
+    moveGhost(game);
+}, 1);
