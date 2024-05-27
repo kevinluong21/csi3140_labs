@@ -1,3 +1,6 @@
+var pacman;
+var ghost;
+
 function createGame(n) {
     const game = new Array(n);
 
@@ -5,11 +8,11 @@ function createGame(n) {
         game[i] = ".";
     }
 
-    var pacman = Math.floor(Math.random() * n);
+    pacman = Math.floor(Math.random() * n);
     game[pacman] = "C";
 
     do {
-        var ghost = Math.floor(Math.random() * n);
+        ghost = Math.floor(Math.random() * n);
     } while (ghost == pacman);
 
     game[ghost] = "^";
@@ -19,6 +22,26 @@ function createGame(n) {
     } while ((fruit == pacman) || (fruit == ghost));
 
     game[fruit] = "@";
+
+    return game;
+}
+
+function moveLeft(game) {
+    if (pacman > 0) {
+        game[pacman - 1] = game[pacman - 1] + "C";
+        game[pacman] = "";
+        pacman = pacman - 1;
+    }
+
+    return game;
+}
+
+function moveRight(game) {
+    if (pacman < game.length) {
+        game[pacman + 1] = game[pacman + 1] + "C";
+        game[pacman] = "";
+        pacman = pacman + 1;
+    }
 
     return game;
 }
