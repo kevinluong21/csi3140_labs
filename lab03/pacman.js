@@ -1,5 +1,6 @@
 var pacman;
 var ghost;
+var score = 0;
 
 function createGame(n) {
     const game = new Array(n);
@@ -28,6 +29,9 @@ function createGame(n) {
 
 function moveLeft(game) {
     if (pacman > 0) {
+        if (game[pacman - 1] == ".") {
+            score++;
+        }
         game[pacman - 1] = game[pacman - 1] + "C";
         game[pacman] = "";
         pacman = pacman - 1;
@@ -38,6 +42,9 @@ function moveLeft(game) {
 
 function moveRight(game) {
     if (pacman < game.length) {
+        if (game[pacman + 1] == ".") {
+            score++;
+        }
         game[pacman + 1] = game[pacman + 1] + "C";
         game[pacman] = "";
         pacman = pacman + 1;
